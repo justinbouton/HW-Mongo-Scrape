@@ -1,6 +1,6 @@
 // Dependancies Express, logger and DB
 const express = require("express");
-// const exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
@@ -18,20 +18,25 @@ var PORT = process.env.PORT || 8080;
 // Morgan logger
 app.use(logger("dev"));
 
-// Parse body JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 // Serve static route to public
 app.use(express.static("public"));
 
+// Parse body JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Set handlebars
-// app.engine("handlebars", exphbs({ 
-//   defaultLayout: "main"
-// }));
-// app.set("view engine", "handlebars");
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
 
 // Connect to Mongo DB
 mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
+
+// Remove exisiting Articles
+function clearArticleDb() {
+  db.Article.deleteMany({});
+}
 
 // Import and serve routes
 // var routes = require("./controllers/article_controller.js")
@@ -42,21 +47,22 @@ mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
 
 // GET homepage
 app.get("/", function(req, res) {
-  res.redirect('/')
+  res.render("index");
+  // res.sendStatus(200);
 })
 
 // GET scrape with Axios
 app.get("/scrape", function(req, res) {
+  // clearArticleDb()
+  // console.log('CLEARED db.Articles')
   // First, we grab the body of the html with axios
   axios.get("https://www.w3.org/blog/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
-
+    
     // Now, we grab every h2 within an article tag, and do the following:
     $("article").each(function(i, element) {
-      // h2
-      // var hTwo = $('h2');
-      
+
       // Save an empty result object
       var result = {};
 
@@ -65,13 +71,14 @@ app.get("/scrape", function(req, res) {
       result.link = $(this).find("a").attr("href");
       result.paragraph = $(this).find("p").text();      
       // result.favorite = $(this).find("p").text();      
-
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
       // console.log(result)
         .then(function(dbArticle) {
           // View the added result in the console
           console.log(dbArticle);
+          // Render 
+          res.render("index", { dbArticle: article });
         })
         .catch(function(err) {
           // If an error occurred, log it
@@ -81,6 +88,8 @@ app.get("/scrape", function(req, res) {
 
     // Refresh page to display articles
     res.redirect("/");
+    // Stop Scrape pulse
+    stop();
   });
 });
 
@@ -126,3 +135,4 @@ app.post("/articles/:id", function(req, res) {
 app.listen(PORT, function() {
   console.log("http://localhost:" + PORT)
 })
+clearArticleDb()

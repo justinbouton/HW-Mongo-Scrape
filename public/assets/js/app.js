@@ -6,7 +6,8 @@ console.log("Scraped!")
 
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
-    // For each one
+  // $("#articles").empty();  
+  // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
       $("#articles").append("<div class='cards' data-id='" + data[i]._id + "'> <h1>" + data[i].title + "<h1> <br /> <a class='link' src=" + data[i].link + ">VISIT WEBPAGE</a> <br />" + data[i].paragraph +"</div>");

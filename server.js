@@ -33,11 +33,6 @@ app.set("view engine", "handlebars");
 // Connect to Mongo DB
 mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
 
-// Remove exisiting Articles
-function clearArticleDb() {
-  db.Article.deleteMany({});
-}
-
 // Import and serve routes
 // var routes = require("./controllers/article_controller.js")
 
@@ -48,13 +43,20 @@ function clearArticleDb() {
 // GET homepage
 app.get("/", function(req, res) {
   res.render("index");
-  // res.sendStatus(200);
 })
 
 // GET scrape with Axios
 app.get("/scrape", function(req, res) {
-  // clearArticleDb()
-  // console.log('CLEARED db.Articles')
+  
+  // Clear Article collection
+  db.Article.deleteMany({})
+    .then(function(dbArticle) {
+      // res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+
   // First, we grab the body of the html with axios
   axios.get("https://www.w3.org/blog/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -77,19 +79,14 @@ app.get("/scrape", function(req, res) {
         .then(function(dbArticle) {
           // View the added result in the console
           console.log(dbArticle);
-          // Render 
-          res.render("index", { dbArticle: article });
         })
         .catch(function(err) {
           // If an error occurred, log it
           console.log(err);
         });
     });
-
     // Refresh page to display articles
     res.redirect("/");
-    // Stop Scrape pulse
-    stop();
   });
 });
 
@@ -135,4 +132,3 @@ app.post("/articles/:id", function(req, res) {
 app.listen(PORT, function() {
   console.log("http://localhost:" + PORT)
 })
-clearArticleDb()

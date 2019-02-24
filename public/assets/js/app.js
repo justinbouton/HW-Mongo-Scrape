@@ -1,3 +1,4 @@
+// Stop scrape button pulse
 function stop() {
   var element = document.getElementById("pulseButton");
   element.classList.remove("pulse");
@@ -6,11 +7,10 @@ console.log("Scraped!")
 
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
-  // $("#articles").empty();  
   // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      $("#articles").append("<div class='cards' data-id='" + data[i]._id + "'> <h1>" + data[i].title + "<h1> <br /> <a class='link' src=" + data[i].link + ">VISIT WEBPAGE</a> <br />" + data[i].paragraph +"</div>");
+      $("#articles").append("<div class='cards' data-toggle='modal' data-target='#cardModal' data-id='" + data[i]._id + "'> <h1>" + data[i].title + "<h1> <br /> <a class='link' src=" + data[i].link + ">VISIT SITE</a> <br />" + data[i].paragraph +"</div>");
     }
   });
   
@@ -33,11 +33,11 @@ $.getJSON("/articles", function(data) {
         // The title of the article
         $("#notes").append("<h2>" + data.title + "</h2>");
         // An input to enter a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
+        $("#notes").append("<br /><input id='titleinput' name='title' placeholder='title'>");
         // A textarea to add a new note body
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
+        $("#notes").append("<br /><textarea id='bodyinput' name='body' placeholder='Notes'></textarea>");
         // A button to submit a new note, with the id of the article saved to it
-        $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+        $("#notes").append("<br /><button data-dismiss='modal' data-id='" + data._id + "' id='savenote'>Save Note</button>");
   
         // If there's a note in the article
         if (data.note) {

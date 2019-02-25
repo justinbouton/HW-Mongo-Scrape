@@ -6,11 +6,10 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link text-white pr-3 pl-3 bg-dark" href="#">Home <span
-                        class="sr-only">(current)</span></a>
+                <a class="nav-link text-white pr-3 pl-3 bg-dark" href="/home">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white pr-3 pl-3 bg-dark" href="#">Saved</a>
+                <a class="nav-link text-white pr-3 pl-3 bg-dark" id='saved' href="#">Saved</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark pr-3 pl-3 bg-light pulse" id="pulseButton"
@@ -31,8 +30,8 @@
 <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-      </div>
+      {{!-- <div class="modal-header">
+      </div> --}}
       <div class="modal-body">
           {{!-- Pass notes to modal --}}
             <div id="notes"></div>

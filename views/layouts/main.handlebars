@@ -19,7 +19,11 @@
             -o-background-size: contain;
             background-size: contain;
         }
-        #articles {
+        .articles {
+            max-width: 100%;
+        }
+        .saveArticle {
+            float: right;
         }
 
         #notes{
@@ -37,9 +41,17 @@
             max-height: 200px;
             /* max-width: 80%; */
             border: 2px white solid;
+            background-color: rgba(0, 0, 0, 0.75);
         }
-
-        body:img {}
+    .cards:hover { 
+        background-color: rgb(54, 54, 53);
+    }
+        #titleinput, #bodyinput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+      
 
         h5 {
             font-family: 'Helvetica', serif;
@@ -49,15 +61,16 @@
             font-size: 36px;
         }
 
-        .pulse {
+        {{!-- .pulse {
             animation-name: pulse_animation;
             animation-duration: 800ms;
             transform-origin: 50% 70%;
             animation-iteration-count: infinite;
             animation-timing-function: linear;
-        }        
+        }         --}}
         #notes{
             color: black;
+            text-align: center;
         }
         @keyframes pulse_animation {
             33% {

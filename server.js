@@ -45,6 +45,19 @@ app.get("/", function(req, res) {
   res.render("index");
 })
 
+// GET Home /clear
+app.get("/home", function(req, res) {
+    // Clear Article collection
+    db.Article.deleteMany({})
+    .then(function(dbArticle) {
+      // res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+    res.redirect("/");
+})
+
 // GET scrape with Axios
 app.get("/scrape", function(req, res) {
   
@@ -72,7 +85,7 @@ app.get("/scrape", function(req, res) {
       result.title = $(this).find("a").text();
       result.link = $(this).find("a").attr("href");
       result.paragraph = $(this).find("p").text();      
-      // result.favorite = $(this).find("p").text();      
+      
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
       // console.log(result)

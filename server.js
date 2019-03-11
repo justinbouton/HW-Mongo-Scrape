@@ -31,7 +31,11 @@ app.set("view engine", "handlebars");
 
 
 // Connect to Mongo DB
-mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrape";
+mongoose.connect(MONGODB_URI);
+
+// Local DB only
+// mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
 
 // Import and serve routes
 // var routes = require("./controllers/article_controller.js")

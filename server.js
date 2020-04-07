@@ -42,15 +42,14 @@ app.get("/", function(req, res) {
 
 // GET Home /clear
 app.get("/home", function(req, res) {
-//     // Clear Article collection
-//     db.Article.deleteMany({})
-//     .then(function(dbArticle) {
-//       // res.json(dbArticle);
-//     })
-//     .catch(function(err) {
-//       res.json(err);
-//     });
-    res.render("index");
+    // Clear Article collection
+    db.Article.deleteMany({})
+    .then(function() {
+      res.render("index");
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
 })
 
 

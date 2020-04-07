@@ -30,14 +30,14 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Connect to Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrape";
-mongoose.connect(MONGODB_URI);
-
+let dbName = "mongodb://localhost/scrape";
+mongoose.connect(process.env.MONGODB_URI || dbName, { useNewUrlParser: true });
+console.log(`\nConnected to: ${dbName}`)
 
 //ROUTES
 // GET homepage
 app.get("/", function(req, res) {
-  res.render("index");
+  res.redirect("/home");
 })
 
 // GET Home /clear
@@ -50,7 +50,6 @@ app.get("/home", function(req, res) {
 //     .catch(function(err) {
 //       res.json(err);
 //     });
-//     res.redirect("/");
     res.render("index");
 })
 
@@ -96,8 +95,8 @@ app.get("/scrape", function(req, res) {
 app.get("/articles", function(req, res) {
   let articles = db.Article.find({})
     .then(function(dbArticle) {
-      // res.json(dbArticle);
       res.render("articles", { dbArticle });
+      // res.render("articles");
     })
     .catch(function(err) {
       res.json(err);
@@ -147,5 +146,5 @@ app.post("/articles/:id", function(req, res) {
 
 // Start server
 app.listen(PORT, function() {
-  console.log("http://localhost:" + PORT)
+  console.log("\n  Server live, access: http://localhost:" + PORT)
 })

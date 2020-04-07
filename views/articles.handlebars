@@ -1,4 +1,12 @@
 <div id="articles">
+    {{#unless dbArticle}}
+      <div class="welcome col-xs-1 text-center">
+        <h1>Let's scrape the web!</h1>  
+        <br>           
+          <a class="text-dark pr-3 pl-3 bg-light pulse" id="pulseButton" href="/scrape"><span>Scrape Articles</span></a>
+      </div>
+    {{/unless}}
+    
     {{#each dbArticle}}
         <div class='cards' data-favorite='false' data-toggle='modal' data-target='#cardModal' data-id='{{ id }}'> <div>
             <button class='saveArticle' data-text-swap='saved'>save</button>

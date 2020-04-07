@@ -29,21 +29,12 @@ app.use(express.json());
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-
 // Connect to Mongo DB
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrape";
 mongoose.connect(MONGODB_URI);
 
-// Local DB only
-// mongoose.connect("mongodb://localhost/scrape", { useNewUrlParser: true });
-
-// Import and serve routes
-// var routes = require("./controllers/article_controller.js")
-
-// app.use(routes);
 
 //ROUTES
-
 // GET homepage
 app.get("/", function(req, res) {
   res.render("index");
@@ -51,29 +42,22 @@ app.get("/", function(req, res) {
 
 // GET Home /clear
 app.get("/home", function(req, res) {
-    // Clear Article collection
-    db.Article.deleteMany({})
-    .then(function(dbArticle) {
-      // res.json(dbArticle);
-    })
-    .catch(function(err) {
-      res.json(err);
-    });
-    res.redirect("/");
+//     // Clear Article collection
+//     db.Article.deleteMany({})
+//     .then(function(dbArticle) {
+//       // res.json(dbArticle);
+//     })
+//     .catch(function(err) {
+//       res.json(err);
+//     });
+//     res.redirect("/");
+    res.render("index");
 })
+
 
 // GET scrape with Axios
 app.get("/scrape", function(req, res) {
   
-  // Clear Article collection
-  db.Article.deleteMany({})
-    .then(function(dbArticle) {
-      // res.json(dbArticle);
-    })
-    .catch(function(err) {
-      res.json(err);
-    });
-
   // First, we grab the body of the html with axios
   axios.get("https://www.w3.org/blog/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -103,20 +87,36 @@ app.get("/scrape", function(req, res) {
         });
     });
     // Refresh page to display articles
-    res.redirect("/");
+    console.log("Scrape Complete")
+    res.redirect("/articles");
   });
 });
 
 // GET all Articles
 app.get("/articles", function(req, res) {
-  db.Article.find({})
+  let articles = db.Article.find({})
     .then(function(dbArticle) {
-      res.json(dbArticle);
+      // res.json(dbArticle);
+      res.render("articles", { dbArticle });
     })
     .catch(function(err) {
       res.json(err);
     });
 });
+
+
+// GET favorite articles
+app.get("/favorites", function(req, res) {
+  let articles = db.Article.find({ "favorite" : true })
+    .then(function(dbArticle) {
+      // res.json(dbArticle);
+      res.render("articles", { dbArticle });
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
 
 // GET specific Article
 app.get("/articles/:id", function(req, res) {

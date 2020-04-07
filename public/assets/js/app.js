@@ -6,13 +6,13 @@
 // }
 
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-    for (var i = 0; i < data.length; i++) {
-      // Display the apropos information on the page
-      $("#articles").append("<div class='cards' data-favorite='false' data-toggle='modal' data-target='#cardModal' data-id='" + data[i]._id + "'> <div><button class='saveArticle' data-text-swap='saved'>save</button></div> <h1>" + data[i].title + "</h1> <br /> <a class='link' src=" + data[i].link + ">VISIT SITE</a> <br />" + data[i].paragraph +"</div>");
-    }
-  });
+// $.getJSON("/articles", function(data) {
+//   // For each one
+//     for (var i = 0; i < data.length; i++) {
+//       // Display the apropos information on the page
+//       $("#articles").append("<div class='cards' data-favorite='false' data-toggle='modal' data-target='#cardModal' data-id='" + data[i]._id + "'> <div><button class='saveArticle' data-text-swap='saved'>save</button></div> <h1>" + data[i].title + "</h1> <br /> <a class='link' src=" + data[i].link + ">VISIT SITE</a> <br />" + data[i].paragraph +"</div>");
+//     }
+//   });
 
   // Whenever someone clicks on saveArticle
   $(document).on("click", ".saveArticle", function() {
@@ -120,3 +120,20 @@ $.getJSON("/articles", function(data) {
 //       }
 //     });
 // });
+
+
+// Create on click function. If nav-item active toggle class "active", toggle class of nav-item to active when clicked.
+$(function() {
+    var page = window.location.pathname;
+
+    $('.nav-item').filter(function(){
+       return $(this).find('a').attr('href').indexOf(page) !== -1
+    }).addClass('active');
+  
+    $(".nav a").on("click", function() {
+      $(".nav").find(".active").removeClass("active");
+      $(this).parent().addClass("active");
+    });
+
+    
+});

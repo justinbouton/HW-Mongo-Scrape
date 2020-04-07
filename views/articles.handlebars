@@ -1,0 +1,26 @@
+<div id="articles">
+    {{#each dbArticle}}
+        <div class='cards' data-favorite='false' data-toggle='modal' data-target='#cardModal' data-id='{{ id }}'> <div>
+            <button class='saveArticle' data-text-swap='saved'>save</button>
+        </div> 
+            <h3>{{ title }}</h3> 
+            <br /> <a class='link' src=" + {{link}} + ">VISIT SITE</a> 
+            <br />{{ paragraph }}
+        </div>
+    {{/each}}
+</div>
+
+
+    <!-- Modal -->
+<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {{!-- <div class="modal-header">
+      </div> --}}
+      <div class="modal-body">
+          {{!-- Pass notes to modal --}}
+            <div id="notes"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,8 +8,9 @@ body {
     background-size: contain;
 }
 
-.saveArticle {
+.saveArticle, #noteArticle, #deleteArticle {
     float: right;
+    margin: 5px;
 }
 
 .nav-link {
@@ -50,6 +51,11 @@ h3 {
 
 h5 {
     font-family: 'Helvetica', serif;
+}
+
+p {
+    font-size: large;
+    line-height: normal;
 }
 
 .custom-text-size {

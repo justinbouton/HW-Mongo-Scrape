@@ -37,25 +37,25 @@ console.log(`\nConnected to: ${dbName}`)
 //ROUTES
 // GET homepage
 app.get("/", function(req, res) {
-  res.redirect("/home");
+  res.redirect("/articles");
 })
 
-// GET Home /clear
-app.get("/home", function(req, res) {
-    // Clear Article collection
-    db.Article.deleteMany({})
-    .then(function() {
-      res.render("index");
-    })
-    .catch(function(err) {
-      res.json(err);
-    });
-})
-
+// Hold scrape results
+let results = [];
 
 // GET scrape with Axios
-app.get("/scrape", function(req, res) {
-  
+app.get("/articles/scrape", function(req, res) {
+   //check exist articles
+   let exist;
+   let existTitle = []
+
+   db.Article.find({})
+     .then(function(dbArticle) {
+         dbArticle.forEach(function(element) {
+             existTitle.push(element.title)
+         })
+     })
+
   // First, we grab the body of the html with axios
   axios.get("https://www.w3.org/blog/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -72,49 +72,62 @@ app.get("/scrape", function(req, res) {
       result.link = $(this).find("a").attr("href");
       result.paragraph = $(this).find("p").text();      
       
-      // Create a new Article using the `result` object built from scraping
-      db.Article.create(result)
-      // console.log(result)
-        .then(function(dbArticle) {
-          // View the added result in the console
-          console.log(dbArticle);
-        })
-        .catch(function(err) {
-          // If an error occurred, log it
-          console.log(err);
-        });
+      // Check if Title exists
+      exist = existTitle.includes(result.title)
+console.log(`\nEXIST: ${exist}`)
+      if (!exist && result.title && result.link && result.paragraph) {
+        results.push(result) 
+console.log(`\nRESULTS: ${result}`)
+      
+      }
     });
+    let dbArticle = results;
     // Refresh page to display articles
     console.log("Scrape Complete")
-    res.redirect("/articles");
+    res.render("articles", { dbArticle } );
   });
 });
 
 // GET all Articles
 app.get("/articles", function(req, res) {
-  let articles = db.Article.find({})
-    .then(function(dbArticle) {
-      res.render("articles", { dbArticle });
-      // res.render("articles");
-    })
-    .catch(function(err) {
-      res.json(err);
-    });
+      res.render("articles", { results });
 });
 
 
 // GET favorite articles
 app.get("/favorites", function(req, res) {
-  let articles = db.Article.find({ "favorite" : true })
+  let articles = db.Article.find({})
     .then(function(dbArticle) {
       // res.json(dbArticle);
-      res.render("articles", { dbArticle });
+      res.render("favorites", { dbArticle });
     })
     .catch(function(err) {
       res.json(err);
     });
 });
 
+// POST individual article
+app.post("/save", function(req, res) {
+  console.log(req.body)
+  db.Article.create(req.body)
+    .then(function(dbArticle) {
+      res.json(dbArticle)
+    })
+    .catch(function(error) {
+      res.json(error)
+    });
+});
+
+// DELETE individual Article
+app.delete("/delete/:id", function(req, res) {
+  db.Article.deleteOne({
+      _id: req.params.id
+  }).then(function(removed) {
+      res.json(removed)
+  }).catch(function(err) {
+      res.json(err)
+  })
+})
 
 // GET specific Article
 app.get("/articles/:id", function(req, res) {
@@ -132,8 +145,17 @@ app.get("/articles/:id", function(req, res) {
 app.post("/articles/:id", function(req, res) {
   db.Note.create(req.body)
     .then(function(dbNote) {
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, {
-        note: dbNote._id }, {new: true });
+      return db.Article.findOneAndUpdate({ 
+        _id: req.params.id 
+      }, 
+      {
+        $push: {
+          note: dbNote._id 
+        }
+      }, 
+      {
+        new: true 
+      });
     })
     .then(function(dbArticle) {
       res.json(dbArticle);

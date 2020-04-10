@@ -1,0 +1,36 @@
+<div id="articles">
+    {{#unless dbArticle}}
+      <div class="welcome col-xs-1 text-center">
+        <h1>No Favorites. Please see <a href="/articles">Articles.</a></h1>  
+      </div>
+    {{/unless}}
+    
+    {{#each dbArticle}}
+        <div class='cards' data-id={{ id }}> 
+          <div>
+            <button data-toggle='modal' data-target='#cardModal' id='noteArticle' data-id={{ id }}>Note</button>
+            <button id='deleteArticle' data-id={{ id }}>Delete</button>
+          </div> 
+          <a class='link' href={{ link }} target="_blank">
+            <h3>{{ title }}</h3> 
+              <br>
+            <p>{{ paragraph }}</p>
+          </a> 
+        </div>
+    {{/each}}
+</div>
+
+
+    <!-- Modal -->
+<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {{!-- <div class="modal-header">
+      </div> --}}
+      <div class="modal-body">
+          {{!-- Pass notes to modal --}}
+            <div id="notes"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,17 +4,15 @@
     <br>
     <h1> Welcome! </h1>
     <br>
-      <p>This site is designed to Scrape Articles from <a href="https://www.w3.org/blog" target="_blank">w3.org/blog/.</a>
+      <p>Scrape Articles from <a href="https://www.w3.org/blog" target="_blank">w3.org/blog/.</a>
       </p>
-      <p>Once the scrape is complete you can save articles you'd like to review. 
-      </p>
-      <p>Then review your <a href="/favorites">Favorites</a> and take notes directly to MongoDB.
+      <p>Review your <a href="/favorites">Favorites</a> and take notes directly to MongoDB.
       </p>
   </div>
   <div class="welcome col-xs-1 text-center">
     <h1>Let's scrape the web!</h1>
     <br>
-    <a class="text-dark pr-3 pl-3 bg-light pulse" id="pulseButton" href="/articles/scrape"><span>Scrape Articles</span></a>
+    <a class="text-dark pr-3 pl-3 bg-light pulse" id="pulseButton" href="/scrape"><span>Scrape Articles</span></a>
   </div>
   {{/unless}}
 
@@ -23,7 +21,7 @@
     <div>
       <button class='saveArticle' data-id={{ @index }}>save</button>
     </div>
-    <a id='link' href={{link}} target="_blank">
+    <a id='link' href={{ link }} target="_blank">
       <h3 id="title">{{ title }}</h3>
       <br /> VISIT SITE <br /> <p id="paragraph">{{ paragraph }}</p>
     </a>

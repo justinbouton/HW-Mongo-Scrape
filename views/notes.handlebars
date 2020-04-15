@@ -1,0 +1,40 @@
+<div id="note">
+    <div class="welcome col-xs-1 text-center">
+        <h3>{{ data.title }} </h3>
+
+<hr>
+
+<div class="commentNote welcome text-left">
+    <form action="" method="POST">
+        <div class="input">
+            <h1>Submit your comments</h1>
+            <label for="noteTitle" class="noteTitle"></label>
+            <input class="form-control" id="noteTitleInput" type="text" placeholder="Title">
+        </div>
+        <div class="input">
+            <label for="noteComments" class="container"></label>
+            <textarea class="form-control" id="noteComments" placeholder="Enter your comments here!"></textarea>
+        </div>
+        <button data-id={{ data.id }} class="saveNote">Submit</button>
+    </form>
+</div>
+
+        <div class="previousNotes">
+            <hr>
+            <h2>Previous Comments</h2>
+            {{#if data.note}}
+            {{#each data.note}}
+            <div class="welcome text-left">
+                <button data-id="{{this._id}}" class="deleteNote">Delete</button>
+                <h1>{{this.title}}</h1>
+                <p>{{this.body}}</p>
+
+            </div>
+            {{/each}}
+            {{else}}
+            <hr>
+            <h6>There is no comments on this article.</h6>
+            {{/if}}
+        </div>
+    </div>
+</div>

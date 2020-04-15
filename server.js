@@ -30,21 +30,21 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Connect to Mongo DB
-let dbName = "mongodb://localhost/scrape";
+let dbName = "mongodb://localhost/mongoHeadlines";
 mongoose.connect(process.env.MONGODB_URI || dbName, { useNewUrlParser: true });
 console.log(`\nConnected to: ${dbName}`)
 
 //ROUTES
 // GET homepage
 app.get("/", function(req, res) {
-  res.redirect("/articles");
+  res.redirect("/home");
 })
 
 // Hold scrape results
 let results = [];
 
 // GET scrape with Axios
-app.get("/articles/scrape", function(req, res) {
+app.get("/scrape", function(req, res) {
    //check exist articles
    let exist;
    let existTitle = []
@@ -89,7 +89,7 @@ console.log(`\nRESULTS: ${result}`)
 });
 
 // GET all Articles
-app.get("/articles", function(req, res) {
+app.get("/home", function(req, res) {
       res.render("articles", { results });
 });
 
@@ -129,20 +129,24 @@ app.delete("/delete/:id", function(req, res) {
   })
 })
 
-// GET specific Article
-app.get("/articles/:id", function(req, res) {
+// GET specific Note by Article ID
+app.get("/note/:id", function(req, res) {
   db.Article.findOne({ _id: req.params.id })
     .populate("note")
     .then(function(dbArticle) {
-      res.json(dbArticle);
+      // res.json(note);
+      console.log("\n\n dbArticle: ", dbArticle)
+      res.render("notes", {
+        data: dbArticle
+      })
     })
     .catch(function(err) {
       res.json(err);
     });
 });
 
-// POST to save/update Articles
-app.post("/articles/:id", function(req, res) {
+// POST Note by Article ID
+app.post("/note/:id", function(req, res) {
   db.Note.create(req.body)
     .then(function(dbNote) {
       return db.Article.findOneAndUpdate({ 
@@ -164,6 +168,17 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+// DELETE Note by ID
+app.delete("/note/:id", function(req, res) {
+  db.Note.deleteOne({
+    _id: req.params.id
+  }).then(function(deleted) {
+    res.json(deleted)
+  }).catch(function(error) {
+    res.json(error)
+  })
+})
 
 // Start server
 app.listen(PORT, function() {

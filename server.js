@@ -30,7 +30,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Connect to Mongo DB
-let dbName = "mongodb://localhost/mongoHeadlines";
+let dbName = "mongodb://localhost/mongoScrape";
 mongoose.connect(process.env.MONGODB_URI || dbName, { useNewUrlParser: true });
 console.log(`\nConnected to: ${dbName}`)
 
